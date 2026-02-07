@@ -16,11 +16,17 @@ struct MorseTrainerWidget: Widget {
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), character: "K", characterOfDay: "K", pattern: ".- -")
+        // Get correct pattern for K
+        let morseChar = MorseCharacter.character(for: "K")
+        let pattern = morseChar?.pattern.map { $0 == .dit ? "•" : "—" }.joined(separator: " ") ?? "— • —"
+        return SimpleEntry(date: Date(), characterOfDay: "K", pattern: pattern)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), character: "K", characterOfDay: "K", pattern: ".- -")
+        // Get correct pattern for K
+        let morseChar = MorseCharacter.character(for: "K")
+        let pattern = morseChar?.pattern.map { $0 == .dit ? "•" : "—" }.joined(separator: " ") ?? "— • —"
+        let entry = SimpleEntry(date: Date(), characterOfDay: "K", pattern: pattern)
         completion(entry)
     }
 
@@ -43,7 +49,7 @@ struct Provider: TimelineProvider {
         // Generate a timeline with a single entry for today
         // Refresh at midnight
         let midnight = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: today)!)
-        let entry = SimpleEntry(date: today, character: String(characterOfDay), characterOfDay: String(characterOfDay), pattern: pattern)
+        let entry = SimpleEntry(date: today, characterOfDay: String(characterOfDay), pattern: pattern)
         entries.append(entry)
 
         let timeline = Timeline(entries: entries, policy: .after(midnight))
@@ -53,7 +59,6 @@ struct Provider: TimelineProvider {
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let character: String
     let characterOfDay: String
     let pattern: String
 }
@@ -86,7 +91,7 @@ struct SmallWidgetView: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                 
-                Text(entry.character)
+                Text(entry.characterOfDay)
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
                 
@@ -102,7 +107,7 @@ struct SmallWidgetView: View {
             }
             .padding()
         }
-        .widgetURL(URL(string: "morsetrainer://character/\(entry.character)")!)
+        .widgetURL(URL(string: "morsetrainer://character/\(entry.characterOfDay)")!)
     }
 }
 
@@ -124,7 +129,7 @@ struct MediumWidgetView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     
-                    Text(entry.character)
+                    Text(entry.characterOfDay)
                         .font(.system(size: 36, weight: .bold, design: .rounded))
                         .foregroundStyle(.primary)
                     
@@ -168,11 +173,15 @@ struct MorseTrainerWidgetBundle: WidgetBundle {
 #Preview("Small", as: .systemSmall) {
     MorseTrainerWidget()
 } timeline: {
-    SimpleEntry(date: .now, character: "K", characterOfDay: "K", pattern: "— • —")
+    let morseChar = MorseCharacter.character(for: "K")
+    let pattern = morseChar?.pattern.map { $0 == .dit ? "•" : "—" }.joined(separator: " ") ?? "— • —"
+    SimpleEntry(date: .now, characterOfDay: "K", pattern: pattern)
 }
 
 #Preview("Medium", as: .systemMedium) {
     MorseTrainerWidget()
 } timeline: {
-    SimpleEntry(date: .now, character: "K", characterOfDay: "K", pattern: "— • —")
+    let morseChar = MorseCharacter.character(for: "K")
+    let pattern = morseChar?.pattern.map { $0 == .dit ? "•" : "—" }.joined(separator: " ") ?? "— • —"
+    SimpleEntry(date: .now, characterOfDay: "K", pattern: pattern)
 }

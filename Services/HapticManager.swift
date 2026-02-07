@@ -4,39 +4,44 @@ import UIKit
 class HapticManager {
     static let shared = HapticManager()
     
-    private let impactGenerator = UIImpactFeedbackGenerator(style: .medium)
+    private let lightImpactGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let mediumImpactGenerator = UIImpactFeedbackGenerator(style: .medium)
     private let notificationGenerator = UINotificationFeedbackGenerator()
     
     private init() {
         // Prepare generators for minimal latency
-        impactGenerator.prepare()
+        lightImpactGenerator.prepare()
+        mediumImpactGenerator.prepare()
         notificationGenerator.prepare()
     }
     
     /// Play haptic feedback for a dit (short tap)
     func playDit() {
-        let lightGenerator = UIImpactFeedbackGenerator(style: .light)
-        lightGenerator.impactOccurred(intensity: 0.7)
+        lightImpactGenerator.impactOccurred(intensity: 0.7)
+        lightImpactGenerator.prepare() // Prepare for next use
     }
     
     /// Play haptic feedback for a dah (longer, stronger tap)
     func playDah() {
-        let mediumGenerator = UIImpactFeedbackGenerator(style: .medium)
-        mediumGenerator.impactOccurred(intensity: 1.0)
+        mediumImpactGenerator.impactOccurred(intensity: 1.0)
+        mediumImpactGenerator.prepare() // Prepare for next use
     }
     
     /// Play success feedback
     func playSuccess() {
         notificationGenerator.notificationOccurred(.success)
+        notificationGenerator.prepare()
     }
     
     /// Play error feedback
     func playError() {
         notificationGenerator.notificationOccurred(.error)
+        notificationGenerator.prepare()
     }
     
     /// Play a subtle tap for general interaction
     func playTap() {
-        impactGenerator.impactOccurred(intensity: 0.5)
+        mediumImpactGenerator.impactOccurred(intensity: 0.5)
+        mediumImpactGenerator.prepare()
     }
 }
