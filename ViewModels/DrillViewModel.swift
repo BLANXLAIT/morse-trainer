@@ -54,6 +54,7 @@ class DrillViewModel: ObservableObject {
         audioEngine.characterWPM = progressManager.settings.characterWPM
         audioEngine.farnsworthWPM = progressManager.settings.farnsworthWPM
         audioEngine.frequency = progressManager.settings.toneFrequency
+        audioEngine.hapticsEnabled = progressManager.settings.hapticFeedback
     }
 
     func startNewRound() {
