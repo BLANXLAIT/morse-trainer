@@ -1,13 +1,18 @@
 import AVFoundation
 import Foundation
+import UIKit
 
 @MainActor
 class AudioEngine: ObservableObject {
     private var audioEngine: AVAudioEngine?
     private var sourceNode: AVAudioSourceNode?
     private let synthesizer = AVSpeechSynthesizer()
+    private let hapticManager = HapticManager.shared
 
     @Published var isPlaying = false
+    
+    /// Whether haptic feedback is enabled
+    var hapticsEnabled: Bool = true
 
     /// Tone frequency in Hz (default 700 Hz - pleasant middle tone)
     var frequency: Double = 700.0
@@ -40,7 +45,8 @@ class AudioEngine: ObservableObject {
     private func setupAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default)
+            // Enable background audio with .playback category and .mixWithOthers option
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try session.setActive(true)
         } catch {
             print("Failed to setup audio session: \(error)")
@@ -128,6 +134,15 @@ class AudioEngine: ObservableObject {
         defer { isPlaying = false }
 
         for (index, element) in character.pattern.enumerated() {
+            // Play haptic feedback at the start of the tone
+            if hapticsEnabled {
+                if element == .dit {
+                    hapticManager.playDit()
+                } else {
+                    hapticManager.playDah()
+                }
+            }
+            
             // Play the tone
             toneOn = true
             let duration = element == .dit ? ditDuration : dahDuration
@@ -155,6 +170,15 @@ class AudioEngine: ObservableObject {
 
         for (charIndex, character) in characters.enumerated() {
             for (index, element) in character.pattern.enumerated() {
+                // Play haptic feedback at the start of the tone
+                if hapticsEnabled {
+                    if element == .dit {
+                        hapticManager.playDit()
+                    } else {
+                        hapticManager.playDah()
+                    }
+                }
+                
                 toneOn = true
                 let duration = element == .dit ? ditDuration : dahDuration
                 try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
