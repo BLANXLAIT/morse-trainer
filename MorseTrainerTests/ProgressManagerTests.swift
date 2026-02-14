@@ -211,11 +211,23 @@ final class ProgressManagerTests: XCTestCase {
         
         // Encode
         let encoder = JSONEncoder()
-        let data = try! encoder.encode(settings)
+        let data: Data
+        do {
+            data = try encoder.encode(settings)
+        } catch {
+            XCTFail("Failed to encode settings: \(error)")
+            return
+        }
         
         // Decode
         let decoder = JSONDecoder()
-        let decoded = try! decoder.decode(AppSettings.self, from: data)
+        let decoded: AppSettings
+        do {
+            decoded = try decoder.decode(AppSettings.self, from: data)
+        } catch {
+            XCTFail("Failed to decode settings: \(error)")
+            return
+        }
         
         XCTAssertEqual(decoded.characterWPM, 25.0)
         XCTAssertEqual(decoded.farnsworthWPM, 10.0)
