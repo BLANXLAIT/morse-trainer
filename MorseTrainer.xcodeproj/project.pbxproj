@@ -21,6 +21,7 @@
 		A12 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12 /* StatsView.swift */; };
 		A13 /* CharacterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13 /* CharacterButton.swift */; };
 		A14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B14 /* Assets.xcassets */; };
+		A15 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15 /* HapticManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		B12 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		B13 /* CharacterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterButton.swift; sourceTree = "<group>"; };
 		B14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B15 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +72,7 @@
 				D06 /* Views */,
 				B14 /* Assets.xcassets */,
 			);
-			path = MorseTrainer;
+			name = MorseTrainer;
 			sourceTree = "<group>";
 		};
 		D02 /* Products */ = {
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				B05 /* AudioEngine.swift */,
+				B15 /* HapticManager.swift */,
 				B06 /* ProgressManager.swift */,
 			);
 			path = Services;
@@ -211,6 +214,7 @@
 				A11 /* SettingsView.swift in Sources */,
 				A12 /* StatsView.swift in Sources */,
 				A13 /* CharacterButton.swift in Sources */,
+				A15 /* HapticManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +350,7 @@
 				DEVELOPMENT_TEAM = GCRLV5UC4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CWCarver;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -375,6 +380,7 @@
 				DEVELOPMENT_TEAM = GCRLV5UC4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CWCarver;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
