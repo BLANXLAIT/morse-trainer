@@ -50,10 +50,12 @@ struct DrillView: View {
                             Text(current.displayString)
                                 .font(.system(size: 80, weight: .bold, design: .rounded))
                                 .foregroundStyle(viewModel.feedbackState == .correct ? .green : .red)
+                                .frame(width: 120, height: 100)
                         } else {
                             Text("?")
                                 .font(.system(size: 80, weight: .bold, design: .rounded))
                                 .foregroundStyle(.secondary)
+                                .frame(width: 120, height: 100)
                         }
                     }
 
@@ -107,16 +109,16 @@ struct DrillView: View {
                     .padding()
                 }
 
-                // Skip button
-                if viewModel.currentCharacter != nil && !viewModel.showingAnswer {
-                    Button("Skip") {
-                        viewModel.skipToNext()
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .disabled(viewModel.isPlaying)
-                    .keyboardShortcut(.space, modifiers: [])
+                // Skip button — always reserve space to prevent layout shift
+                Button("Skip") {
+                    viewModel.skipToNext()
                 }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .disabled(viewModel.isPlaying)
+                .keyboardShortcut(.space, modifiers: [])
+                .opacity(viewModel.currentCharacter != nil && !viewModel.showingAnswer ? 1 : 0)
+                .allowsHitTesting(viewModel.currentCharacter != nil && !viewModel.showingAnswer)
 
                 Spacer()
             }

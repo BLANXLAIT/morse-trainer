@@ -2,6 +2,18 @@ import AVFoundation
 import Foundation
 import UIKit
 
+/// Thread-safe state for the audio render callback.
+/// Uses `nonisolated(unsafe)` so the real-time audio thread can read/write
+/// without going through MainActor, avoiding the "unsafeForcedSync" warning.
+private final class AudioRenderState: @unchecked Sendable {
+    /// Whether the tone is currently on
+    var toneOn: Bool = false
+    /// Current phase for sine wave generation
+    var phase: Double = 0.0
+    /// Active frequency for the render callback
+    var frequency: Double = 700.0
+}
+
 @MainActor
 class AudioEngine: ObservableObject {
     private var audioEngine: AVAudioEngine?
@@ -10,7 +22,7 @@ class AudioEngine: ObservableObject {
     private let hapticManager = HapticManager.shared
 
     @Published var isPlaying = false
-    
+
     /// Whether haptic feedback is enabled
     var hapticsEnabled: Bool = true
 
@@ -32,11 +44,9 @@ class AudioEngine: ObservableObject {
     /// Sample rate for audio generation
     private let sampleRate: Double = 44100.0
 
-    /// Current phase for sine wave generation
-    private var phase: Double = 0.0
-
-    /// Whether the tone is currently on
-    private var toneOn = false
+    /// Audio thread state — accessed from the real-time render callback,
+    /// so kept outside of actor isolation to avoid data races.
+    private let renderState = AudioRenderState()
 
     init() {
         setupAudioSession()
@@ -61,19 +71,18 @@ class AudioEngine: ObservableObject {
         let outputFormat = mainMixer.outputFormat(forBus: 0)
         let sampleRate = outputFormat.sampleRate
 
-        sourceNode = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
-            guard let self = self else { return noErr }
-
+        let state = self.renderState
+        sourceNode = AVAudioSourceNode { _, _, frameCount, audioBufferList -> OSStatus in
             let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
-            let phaseIncrement = 2.0 * Double.pi * self.frequency / sampleRate
+            let phaseIncrement = 2.0 * Double.pi * state.frequency / sampleRate
 
             for frame in 0..<Int(frameCount) {
                 let value: Float
-                if self.toneOn {
-                    value = Float(sin(self.phase)) * 0.3 // 0.3 amplitude to avoid clipping
-                    self.phase += phaseIncrement
-                    if self.phase >= 2.0 * Double.pi {
-                        self.phase -= 2.0 * Double.pi
+                if state.toneOn {
+                    value = Float(sin(state.phase)) * 0.3
+                    state.phase += phaseIncrement
+                    if state.phase >= 2.0 * Double.pi {
+                        state.phase -= 2.0 * Double.pi
                     }
                 } else {
                     value = 0.0
@@ -144,10 +153,10 @@ class AudioEngine: ObservableObject {
             }
             
             // Play the tone
-            toneOn = true
+            renderState.toneOn = true
             let duration = element == .dit ? ditDuration : dahDuration
             try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
-            toneOn = false
+            renderState.toneOn = false
 
             // Add intra-character space (except after last element)
             if index < character.pattern.count - 1 {
@@ -179,10 +188,10 @@ class AudioEngine: ObservableObject {
                     }
                 }
                 
-                toneOn = true
+                renderState.toneOn = true
                 let duration = element == .dit ? ditDuration : dahDuration
                 try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
-                toneOn = false
+                renderState.toneOn = false
 
                 if index < character.pattern.count - 1 {
                     try? await Task.sleep(nanoseconds: UInt64(intraCharacterSpace * 1_000_000_000))
@@ -197,6 +206,7 @@ class AudioEngine: ObservableObject {
     }
 
     private func startEngine() async {
+        renderState.frequency = frequency
         setupEngine()
         do {
             try audioEngine?.start()
@@ -206,14 +216,14 @@ class AudioEngine: ObservableObject {
     }
 
     private func stopEngine() {
-        toneOn = false
+        renderState.toneOn = false
         audioEngine?.stop()
         if let sourceNode = sourceNode {
             audioEngine?.detach(sourceNode)
         }
         sourceNode = nil
         audioEngine = nil
-        phase = 0.0
+        renderState.phase = 0.0
     }
 
     /// Stop any currently playing audio
@@ -228,6 +238,7 @@ class AudioEngine: ObservableObject {
     func playFeedbackTone(correct: Bool) async {
         let savedFrequency = frequency
         frequency = correct ? correctToneFrequency : incorrectToneFrequency
+        renderState.frequency = frequency
 
         await startEngine()
 
@@ -235,21 +246,23 @@ class AudioEngine: ObservableObject {
         defer {
             isPlaying = false
             frequency = savedFrequency
+            renderState.frequency = savedFrequency
         }
 
         // Play a short beep
-        toneOn = true
+        renderState.toneOn = true
         let duration = correct ? 0.15 : 0.3  // Correct is short chirp, incorrect is longer
         try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
-        toneOn = false
+        renderState.toneOn = false
 
         // For incorrect, add a second lower beep
         if !correct {
             try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s gap
             frequency = incorrectToneFrequency * 0.75  // Even lower
-            toneOn = true
+            renderState.frequency = frequency
+            renderState.toneOn = true
             try? await Task.sleep(nanoseconds: UInt64(0.2 * 1_000_000_000))
-            toneOn = false
+            renderState.toneOn = false
         }
 
         stopEngine()

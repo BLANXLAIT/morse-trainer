@@ -102,3 +102,6 @@ iOSInjectionProject/
 # Backup files
 *.bak
 *.orig
+
+# Firebase
+firebase-debug.log
