@@ -62,6 +62,28 @@ MVVM with SwiftUI. All services and view models are `@MainActor`.
 ### Widget Extension
 `MorseTrainerWidget/` — `TimelineProvider` rotates through Koch sequence daily. Supports small (character only) and medium (character + quick-start) sizes.
 
+## Git Workflow
+
+Direct pushes to `main` are blocked. All changes must go through a pull request with a passing Xcode Cloud build.
+
+```bash
+# 1. Create a feature branch
+git checkout -b my-feature
+
+# 2. Make changes, commit
+git add <files>
+git commit -m "description"
+
+# 3. Push branch and create PR
+git push -u origin my-feature
+gh pr create --title "My feature" --body "summary"
+
+# 4. Wait for Xcode Cloud build to pass, then merge
+gh pr merge --squash
+```
+
+**Code changes** must go through a PR — direct pushes to `main` will be rejected by branch protection. **Docs-only changes** (CLAUDE.md, README, etc.) can be pushed directly to `main` using admin bypass.
+
 ## Key Domain Concepts
 
 - **Koch method**: teach characters ordered by distinctiveness, not alphabetically. Learner masters each character at speed before adding the next.
