@@ -61,7 +61,7 @@ The project includes comprehensive unit test coverage for core logic components:
 - **AudioEngineTests**: Timing calculations and configuration
 
 ### Continuous Integration
-Tests run automatically on every pull request and push to main via GitHub Actions.
+Tests are configured to run with Xcode Cloud. The test plan (`MorseTrainerTests.xctestplan`) is included in the project for CI configuration through App Store Connect.
 
 ## Settings
 - Character WPM: Adjustable speed for individual characters

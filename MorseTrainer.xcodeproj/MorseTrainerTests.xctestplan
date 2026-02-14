@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "Default",
+      "name" : "Configuration 1",
+      "options" : {
+        "codeCoverage" : {
+          "targets" : [
+            {
+              "containerPath" : "container:MorseTrainer.xcodeproj",
+              "identifier" : "E00",
+              "name" : "MorseTrainer"
+            }
+          ]
+        },
+        "targetForVariableExpansion" : {
+          "containerPath" : "container:MorseTrainer.xcodeproj",
+          "identifier" : "E00",
+          "name" : "MorseTrainer"
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MorseTrainer.xcodeproj",
+      "identifier" : "E00",
+      "name" : "MorseTrainer"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MorseTrainer.xcodeproj",
+        "identifier" : "T01",
+        "name" : "MorseTrainerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
