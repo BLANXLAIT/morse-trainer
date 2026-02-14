@@ -140,9 +140,14 @@ class AudioEngine: ObservableObject {
         await startEngine()
 
         isPlaying = true
-        defer { isPlaying = false }
+        defer {
+            isPlaying = false
+            stopEngine()
+        }
 
         for (index, element) in character.pattern.enumerated() {
+            guard !Task.isCancelled else { return }
+
             // Play haptic feedback at the start of the tone
             if hapticsEnabled {
                 if element == .dit {
@@ -151,7 +156,7 @@ class AudioEngine: ObservableObject {
                     hapticManager.playDah()
                 }
             }
-            
+
             // Play the tone
             renderState.toneOn = true
             let duration = element == .dit ? ditDuration : dahDuration
@@ -163,8 +168,6 @@ class AudioEngine: ObservableObject {
                 try? await Task.sleep(nanoseconds: UInt64(intraCharacterSpace * 1_000_000_000))
             }
         }
-
-        stopEngine()
     }
 
     /// Play a sequence of characters (for future word practice)
@@ -179,6 +182,8 @@ class AudioEngine: ObservableObject {
 
         for (charIndex, character) in characters.enumerated() {
             for (index, element) in character.pattern.enumerated() {
+                guard !Task.isCancelled else { return }
+
                 // Play haptic feedback at the start of the tone
                 if hapticsEnabled {
                     if element == .dit {
@@ -187,7 +192,7 @@ class AudioEngine: ObservableObject {
                         hapticManager.playDah()
                     }
                 }
-                
+
                 renderState.toneOn = true
                 let duration = element == .dit ? ditDuration : dahDuration
                 try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
@@ -200,6 +205,7 @@ class AudioEngine: ObservableObject {
 
             // Add inter-character space (except after last character)
             if charIndex < characters.count - 1 {
+                guard !Task.isCancelled else { return }
                 try? await Task.sleep(nanoseconds: UInt64(interCharacterSpace * 1_000_000_000))
             }
         }
@@ -228,6 +234,7 @@ class AudioEngine: ObservableObject {
 
     /// Stop any currently playing audio
     func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
         stopEngine()
         isPlaying = false
     }
@@ -247,7 +254,10 @@ class AudioEngine: ObservableObject {
             isPlaying = false
             frequency = savedFrequency
             renderState.frequency = savedFrequency
+            stopEngine()
         }
+
+        guard !Task.isCancelled else { return }
 
         // Play a short beep
         renderState.toneOn = true
@@ -257,6 +267,7 @@ class AudioEngine: ObservableObject {
 
         // For incorrect, add a second lower beep
         if !correct {
+            guard !Task.isCancelled else { return }
             try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s gap
             frequency = incorrectToneFrequency * 0.75  // Even lower
             renderState.frequency = frequency
@@ -264,8 +275,6 @@ class AudioEngine: ObservableObject {
             try? await Task.sleep(nanoseconds: UInt64(0.2 * 1_000_000_000))
             renderState.toneOn = false
         }
-
-        stopEngine()
     }
 
     /// Speak the character name using text-to-speech
