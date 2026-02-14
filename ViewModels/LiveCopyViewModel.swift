@@ -65,6 +65,8 @@ class LiveCopyViewModel: ObservableObject {
         feedbackResults = []
         justUnlockedCharacter = nil
 
+        guard !availableCharacters.isEmpty else { return }
+
         // Live copy uses longer sequences (5-20 characters)
         let length = Int.random(in: 5...20)
         currentSequence = (0..<length).map { _ in
