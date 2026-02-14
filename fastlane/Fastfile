@@ -17,8 +17,7 @@ platform :ios do
       skip_screenshots: true,
       force: true,
       precheck_include_in_app_purchases: false,
-      app_review_information: {},
-      app_review_attachment_file: ""
+      app_review_information: {}
     )
   end
 
