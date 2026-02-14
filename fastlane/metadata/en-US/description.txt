@@ -1,0 +1,16 @@
+CW Carver teaches you Morse code (CW) using the Koch method — the most effective way to build real listening speed from day one.
+
+Instead of memorizing dot-dash patterns visually, the Koch method trains your ear by playing characters at full speed from the start. You begin with just two characters and unlock more as you demonstrate proficiency.
+
+Features:
+
+- Koch method progression with adaptive unlock — advances based on your actual skill level
+- Adjustable character speed (15–35 WPM) and Farnsworth spacing (3–20 WPM)
+- Configurable tone frequency (400–1000 Hz)
+- Haptic feedback — feel the rhythm of dit and dah patterns
+- Eyes-closed mode for distraction-free practice
+- Lock screen widgets for daily character review and quick-start drills
+- Session tracking that persists across app restarts
+- Background audio — keep practicing while multitasking
+
+Open source at github.com/BLANXLAIT/morse-trainer

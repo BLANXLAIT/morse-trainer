@@ -1,0 +1,5 @@
+- Session stats now persist across app restarts
+- Smarter auto-unlock: adaptive algorithm considers overall proficiency, momentum, and pool health
+- New Session button to reset stats when you're ready for a fresh start
+- Sessions auto-reset after 4 hours idle
+- Multi-unlock for experienced operators advancing quickly
