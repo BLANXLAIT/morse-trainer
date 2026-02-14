@@ -3,6 +3,7 @@ import SwiftUI
 struct MainMenuView: View {
     @EnvironmentObject var progressManager: ProgressManager
     @State private var showingDrill = false
+    @State private var showingLiveCopy = false
     @State private var showingHeadCopy = false
     @State private var showingSettings = false
     @State private var showingProgress = false
@@ -49,6 +50,18 @@ struct MainMenuView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(.blue)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
+                    Button {
+                        showingLiveCopy = true
+                    } label: {
+                        Label("Live Copy", systemImage: "waveform")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.purple)
                             .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
@@ -110,6 +123,10 @@ struct MainMenuView: View {
             }
             .fullScreenCover(isPresented: $showingDrill) {
                 DrillView()
+                    .environmentObject(progressManager)
+            }
+            .fullScreenCover(isPresented: $showingLiveCopy) {
+                LiveCopyView()
                     .environmentObject(progressManager)
             }
             .fullScreenCover(isPresented: $showingHeadCopy) {
