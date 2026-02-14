@@ -4,6 +4,8 @@ import SwiftUI
 @MainActor
 class LiveCopyViewModel: HeadCopyViewModel {
 
+    override var shouldSpeakAnswer: Bool { false }
+
     override func startNewRound() {
         isSubmitted = false
         userInput = []

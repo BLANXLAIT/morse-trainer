@@ -22,6 +22,9 @@ class HeadCopyViewModel: ObservableObject {
         currentSequence.count
     }
 
+    /// Whether to speak the answer aloud after submission. Override in subclasses to disable.
+    var shouldSpeakAnswer: Bool { true }
+
     init() {}
 
     func setup(progressManager: ProgressManager) {
@@ -149,12 +152,13 @@ class HeadCopyViewModel: ObservableObject {
         }
 
         // Audio feedback
+        let shouldSpeak = shouldSpeakAnswer
         let feedbackTask = Task {
             if progressManager.settings.audioFeedback {
                 await audioEngine?.playFeedbackTone(correct: allCorrect)
             }
 
-            if progressManager.settings.speakAnswer {
+            if shouldSpeak && progressManager.settings.speakAnswer {
                 try? await Task.sleep(nanoseconds: 200_000_000)
                 guard !Task.isCancelled else { return }
                 let answer = currentSequence.map { String($0.character) }.joined(separator: ", ")
@@ -164,7 +168,7 @@ class HeadCopyViewModel: ObservableObject {
         activeTasks.append(feedbackTask)
 
         // Auto-advance
-        let delay: UInt64 = progressManager.settings.speakAnswer ? 3_000_000_000 : 2_000_000_000
+        let delay: UInt64 = (shouldSpeak && progressManager.settings.speakAnswer) ? 3_000_000_000 : 2_000_000_000
         let advanceTask = Task {
             try? await Task.sleep(nanoseconds: delay)
             guard !Task.isCancelled else { return }
