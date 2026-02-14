@@ -264,11 +264,12 @@ class AudioEngine: ObservableObject {
         let duration = correct ? 0.15 : 0.3  // Correct is short chirp, incorrect is longer
         try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
         renderState.toneOn = false
+        guard !Task.isCancelled else { return }
 
         // For incorrect, add a second lower beep
         if !correct {
-            guard !Task.isCancelled else { return }
             try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s gap
+            guard !Task.isCancelled else { return }
             frequency = incorrectToneFrequency * 0.75  // Even lower
             renderState.frequency = frequency
             renderState.toneOn = true
