@@ -3,6 +3,7 @@ import SwiftUI
 struct MainMenuView: View {
     @EnvironmentObject var progressManager: ProgressManager
     @State private var showingDrill = false
+    @State private var showingHeadCopy = false
     @State private var showingSettings = false
     @State private var showingProgress = false
 
@@ -52,6 +53,18 @@ struct MainMenuView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
+                    Button {
+                        showingHeadCopy = true
+                    } label: {
+                        Label("Head Copy", systemImage: "brain.head.profile")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.indigo)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
                     HStack(spacing: 16) {
                         Button {
                             showingProgress = true
@@ -97,6 +110,10 @@ struct MainMenuView: View {
             }
             .fullScreenCover(isPresented: $showingDrill) {
                 DrillView()
+                    .environmentObject(progressManager)
+            }
+            .fullScreenCover(isPresented: $showingHeadCopy) {
+                HeadCopyView()
                     .environmentObject(progressManager)
             }
             .sheet(isPresented: $showingSettings) {

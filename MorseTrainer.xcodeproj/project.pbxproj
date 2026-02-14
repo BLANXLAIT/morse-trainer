@@ -22,6 +22,8 @@
 		A13 /* CharacterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13 /* CharacterButton.swift */; };
 		A14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B14 /* Assets.xcassets */; };
 		A15 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15 /* HapticManager.swift */; };
+		A16 /* HeadCopyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16 /* HeadCopyViewModel.swift */; };
+		A17 /* HeadCopyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17 /* HeadCopyView.swift */; };
 		T20B /* UserProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20 /* UserProgressTests.swift */; };
 		T21B /* DrillViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T21 /* DrillViewModelTests.swift */; };
 		T22B /* ProgressManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T22 /* ProgressManagerTests.swift */; };
@@ -55,6 +57,8 @@
 		B13 /* CharacterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterButton.swift; sourceTree = "<group>"; };
 		B14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B15 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		B16 /* HeadCopyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadCopyViewModel.swift; sourceTree = "<group>"; };
+		B17 /* HeadCopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadCopyView.swift; sourceTree = "<group>"; };
 		T00 /* MorseTrainerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MorseTrainerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		T20 /* UserProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProgressTests.swift; sourceTree = "<group>"; };
 		T21 /* DrillViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillViewModelTests.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				B07 /* DrillViewModel.swift */,
+				B16 /* HeadCopyViewModel.swift */,
 				B08 /* SettingsViewModel.swift */,
 			);
 			path = ViewModels;
@@ -145,6 +150,7 @@
 			children = (
 				B09 /* MainMenuView.swift */,
 				B10 /* DrillView.swift */,
+				B17 /* HeadCopyView.swift */,
 				B11 /* SettingsView.swift */,
 				B12 /* StatsView.swift */,
 				D07 /* Components */,
@@ -284,6 +290,8 @@
 				A12 /* StatsView.swift in Sources */,
 				A13 /* CharacterButton.swift in Sources */,
 				A15 /* HapticManager.swift in Sources */,
+				A16 /* HeadCopyViewModel.swift in Sources */,
+				A17 /* HeadCopyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
