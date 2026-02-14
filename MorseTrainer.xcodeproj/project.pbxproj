@@ -24,10 +24,13 @@
 		A15 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15 /* HapticManager.swift */; };
 		A16 /* HeadCopyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16 /* HeadCopyViewModel.swift */; };
 		A17 /* HeadCopyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17 /* HeadCopyView.swift */; };
+		A18 /* LiveCopyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18 /* LiveCopyViewModel.swift */; };
+		A19 /* LiveCopyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19 /* LiveCopyView.swift */; };
 		T20B /* UserProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20 /* UserProgressTests.swift */; };
 		T21B /* DrillViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T21 /* DrillViewModelTests.swift */; };
 		T22B /* ProgressManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T22 /* ProgressManagerTests.swift */; };
 		T23B /* AudioEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T23 /* AudioEngineTests.swift */; };
+		T24B /* LiveCopyViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T24 /* LiveCopyViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,11 +62,14 @@
 		B15 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		B16 /* HeadCopyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadCopyViewModel.swift; sourceTree = "<group>"; };
 		B17 /* HeadCopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadCopyView.swift; sourceTree = "<group>"; };
+		B18 /* LiveCopyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCopyViewModel.swift; sourceTree = "<group>"; };
+		B19 /* LiveCopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCopyView.swift; sourceTree = "<group>"; };
 		T00 /* MorseTrainerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MorseTrainerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		T20 /* UserProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProgressTests.swift; sourceTree = "<group>"; };
 		T21 /* DrillViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillViewModelTests.swift; sourceTree = "<group>"; };
 		T22 /* ProgressManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManagerTests.swift; sourceTree = "<group>"; };
 		T23 /* AudioEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineTests.swift; sourceTree = "<group>"; };
+		T24 /* LiveCopyViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCopyViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +146,7 @@
 			children = (
 				B07 /* DrillViewModel.swift */,
 				B16 /* HeadCopyViewModel.swift */,
+				B18 /* LiveCopyViewModel.swift */,
 				B08 /* SettingsViewModel.swift */,
 			);
 			path = ViewModels;
@@ -151,6 +158,7 @@
 				B09 /* MainMenuView.swift */,
 				B10 /* DrillView.swift */,
 				B17 /* HeadCopyView.swift */,
+				B19 /* LiveCopyView.swift */,
 				B11 /* SettingsView.swift */,
 				B12 /* StatsView.swift */,
 				D07 /* Components */,
@@ -173,6 +181,7 @@
 				T21 /* DrillViewModelTests.swift */,
 				T22 /* ProgressManagerTests.swift */,
 				T23 /* AudioEngineTests.swift */,
+				T24 /* LiveCopyViewModelTests.swift */,
 			);
 			path = MorseTrainerTests;
 			sourceTree = "<group>";
@@ -292,6 +301,8 @@
 				A15 /* HapticManager.swift in Sources */,
 				A16 /* HeadCopyViewModel.swift in Sources */,
 				A17 /* HeadCopyView.swift in Sources */,
+				A18 /* LiveCopyViewModel.swift in Sources */,
+				A19 /* LiveCopyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +314,7 @@
 				T21B /* DrillViewModelTests.swift in Sources */,
 				T22B /* ProgressManagerTests.swift in Sources */,
 				T23B /* AudioEngineTests.swift in Sources */,
+				T24B /* LiveCopyViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
