@@ -179,14 +179,22 @@ final class UserProgressTests: XCTestCase {
     
     func testCharactersToUnlock_MultiUnlock() {
         var progress = UserProgress()
-        
+
         // Create conditions for multi-unlock: pool >= 95%, newest >= 90%
-        // Record 10 perfect attempts for both characters
+        // Must break streak so momentum check doesn't short-circuit to 1
+        progress.recordAttempt(character: "K", correct: false) // break streak
         for _ in 0..<10 {
             progress.recordAttempt(character: "K", correct: true)
+        }
+        for _ in 0..<10 {
             progress.recordAttempt(character: "M", correct: true)
         }
-        
+        // Break streak at end so hasMomentum is false
+        progress.recordAttempt(character: "K", correct: false)
+
+        // Pool accuracy: K=10/10 (last 10), M=10/10 = 100% >= 95%
+        // Newest (M) accuracy: 10/10 = 100% >= 90%
+        // hasMomentum: false (streak broken), so momentum gate doesn't fire
         XCTAssertEqual(progress.charactersToUnlock(), 2)
     }
     
