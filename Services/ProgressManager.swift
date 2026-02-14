@@ -38,12 +38,19 @@ class ProgressManager: ObservableObject {
 
     func recordAttempt(character: Character, correct: Bool) {
         progress.recordAttempt(character: character, correct: correct)
+        progress.recordSessionAttempt(correct: correct)
 
-        // Check if we should unlock next character
-        if progress.shouldUnlockNextCharacter() {
-            progress.unlockNextCharacter()
+        // Check if we should unlock characters (supports multi-unlock)
+        let toUnlock = progress.charactersToUnlock()
+        if toUnlock > 0 {
+            progress.unlockNextCharacters(toUnlock)
         }
 
+        save()
+    }
+
+    func resetSession() {
+        progress.resetSession()
         save()
     }
 

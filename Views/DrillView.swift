@@ -18,9 +18,15 @@ struct DrillView: View {
                         Text("\(viewModel.sessionCorrect)/\(viewModel.sessionTotal)")
                             .font(.title2)
                             .fontWeight(.semibold)
-                        Text("this session")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        if let date = progressManager.progress.lastSessionDate {
+                            Text("started \(date, style: .relative) ago")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("this session")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
 
                     Spacer()
@@ -146,6 +152,15 @@ struct DrillView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
+                    }
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        viewModel.resetSession()
+                        viewModel.startNewRound()
+                    } label: {
+                        Label("New Session", systemImage: "arrow.counterclockwise")
                     }
                 }
             }

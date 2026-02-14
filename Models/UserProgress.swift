@@ -20,6 +20,15 @@ struct UserProgress: Codable {
     /// Best streak achieved
     var bestStreak: Int
 
+    /// Session correct answers (persisted across app restarts)
+    var sessionCorrect: Int
+
+    /// Session total attempts (persisted across app restarts)
+    var sessionTotal: Int
+
+    /// When the current session started
+    var lastSessionDate: Date?
+
     init() {
         self.unlockedCount = KochSequence.minimumCharacters
         self.characterHistory = [:]
@@ -27,6 +36,9 @@ struct UserProgress: Codable {
         self.totalAttempts = 0
         self.currentStreak = 0
         self.bestStreak = 0
+        self.sessionCorrect = 0
+        self.sessionTotal = 0
+        self.lastSessionDate = nil
     }
 
     /// Get accuracy percentage for a specific character (last 10 attempts)
@@ -68,25 +80,96 @@ struct UserProgress: Codable {
         }
     }
 
-    /// Check if ready to unlock next character (90% accuracy on current set)
-    func shouldUnlockNextCharacter() -> Bool {
-        guard unlockedCount < KochSequence.totalCharacters else { return false }
+    /// Average accuracy across all unlocked characters that have history
+    var poolAccuracy: Double {
+        let unlockedChars = KochSequence.order.prefix(unlockedCount)
+        let accuracies = unlockedChars.compactMap { char -> Double? in
+            guard let history = characterHistory[String(char)], !history.isEmpty else { return nil }
+            return accuracy(for: char)
+        }
+        guard !accuracies.isEmpty else { return 0.0 }
+        return accuracies.reduce(0, +) / Double(accuracies.count)
+    }
 
-        // Need at least 10 attempts on the newest character
+    /// Whether the user has scored 100% on their last 5 attempts across all characters
+    var hasMomentum: Bool {
+        // Collect the most recent attempts across all characters, ordered by recency
+        // Since we only store per-character history, check if the global streak is >= 5
+        return currentStreak >= 5
+    }
+
+    /// Determine how many characters to unlock (0, 1, or 2)
+    func charactersToUnlock() -> Int {
+        guard unlockedCount < KochSequence.totalCharacters else { return 0 }
+
         let newestChar = KochSequence.order[unlockedCount - 1]
-        guard let history = characterHistory[String(newestChar)], history.count >= 10 else {
-            return false
+        let newestHistory = characterHistory[String(newestChar)] ?? []
+        let newestAcc = accuracy(for: newestChar)
+        let pool = poolAccuracy
+
+        // Momentum bonus: relax newest-character gate
+        if hasMomentum && newestHistory.count >= 5 && newestAcc >= 70.0 && pool >= 75.0 {
+            return 1
         }
 
-        // Check if accuracy is 90% or better on newest character
-        return accuracy(for: newestChar) >= 90.0
+        // Primary gate: newest character readiness
+        guard newestHistory.count >= 8 && newestAcc >= 80.0 else { return 0 }
+
+        // Pool health: all unlocked characters must average ≥75%
+        guard pool >= 75.0 else { return 0 }
+
+        // Multi-unlock: experienced operator advancing fast
+        if pool >= 95.0 && newestAcc >= 90.0 && unlockedCount + 1 < KochSequence.totalCharacters {
+            return 2
+        }
+
+        return 1
+    }
+
+    /// Legacy compatibility — true if at least one character should unlock
+    func shouldUnlockNextCharacter() -> Bool {
+        return charactersToUnlock() > 0
+    }
+
+    /// Unlock the next n characters in Koch sequence (clamped to max)
+    mutating func unlockNextCharacters(_ count: Int = 1) {
+        let newCount = min(unlockedCount + count, KochSequence.totalCharacters)
+        unlockedCount = newCount
     }
 
     /// Unlock the next character in Koch sequence
     mutating func unlockNextCharacter() {
-        if unlockedCount < KochSequence.totalCharacters {
-            unlockedCount += 1
+        unlockNextCharacters(1)
+    }
+
+    /// Record a session attempt (updates session counters)
+    mutating func recordSessionAttempt(correct: Bool) {
+        if lastSessionDate == nil {
+            lastSessionDate = Date()
         }
+        sessionTotal += 1
+        if correct {
+            sessionCorrect += 1
+        }
+    }
+
+    /// Reset session stats for a new session
+    mutating func resetSession() {
+        sessionCorrect = 0
+        sessionTotal = 0
+        lastSessionDate = Date()
+    }
+
+    /// Session accuracy percentage
+    var sessionAccuracy: Double {
+        guard sessionTotal > 0 else { return 0.0 }
+        return Double(sessionCorrect) / Double(sessionTotal) * 100.0
+    }
+
+    /// Whether the session is stale (4+ hours old)
+    var isSessionStale: Bool {
+        guard let date = lastSessionDate else { return false }
+        return Date().timeIntervalSince(date) >= 4 * 60 * 60
     }
 
     /// Get the characters currently available for practice

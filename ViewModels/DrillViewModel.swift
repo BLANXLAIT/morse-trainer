@@ -31,6 +31,13 @@ class DrillViewModel: ObservableObject {
         self.audioEngine = AudioEngine()
         updateAudioSettings()
 
+        // Load persisted session stats (auto-reset if stale)
+        if progressManager.progress.isSessionStale {
+            progressManager.resetSession()
+        }
+        sessionCorrect = progressManager.progress.sessionCorrect
+        sessionTotal = progressManager.progress.sessionTotal
+
         // Observe audio engine's isPlaying state
         audioEngine?.$isPlaying
             .receive(on: DispatchQueue.main)
@@ -117,11 +124,15 @@ class DrillViewModel: ObservableObject {
             }
         }
 
-        // Record the attempt
+        // Record the attempt (also persists session stats)
         let previousUnlockedCount = progressManager.progress.unlockedCount
         progressManager.recordAttempt(character: current.character, correct: correct)
 
-        // Check if a new character was unlocked
+        // Sync local session counters from persisted state
+        sessionCorrect = progressManager.progress.sessionCorrect
+        sessionTotal = progressManager.progress.sessionTotal
+
+        // Check if new character(s) were unlocked — show the latest one
         if progressManager.progress.unlockedCount > previousUnlockedCount {
             let newCharIndex = progressManager.progress.unlockedCount - 1
             justUnlockedCharacter = KochSequence.order[newCharIndex]
@@ -158,6 +169,7 @@ class DrillViewModel: ObservableObject {
     }
 
     func resetSession() {
+        progressManager?.resetSession()
         sessionCorrect = 0
         sessionTotal = 0
         feedbackState = .none
