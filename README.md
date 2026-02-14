@@ -47,6 +47,22 @@ The audio engine now supports background playback:
 - Xcode 15.0+
 - Swift 5.9+
 
+## Development
+
+### Running Tests
+The project includes comprehensive unit test coverage for core logic components:
+- Run tests in Xcode: `⌘U` or Product > Test
+- Run tests from command line: `xcodebuild test -project MorseTrainer.xcodeproj -scheme MorseTrainer -destination 'platform=iOS Simulator,name=iPhone 15'`
+
+### Test Coverage
+- **UserProgressTests**: Progress tracking, accuracy calculations, unlock logic
+- **DrillViewModelTests**: Drill state management, answer submission
+- **ProgressManagerTests**: Persistence and settings management
+- **AudioEngineTests**: Timing calculations and configuration
+
+### Continuous Integration
+Tests run automatically on every pull request and push to main via GitHub Actions.
+
 ## Settings
 - Character WPM: Adjustable speed for individual characters
 - Farnsworth WPM: Adjustable spacing between characters
