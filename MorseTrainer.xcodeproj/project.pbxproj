@@ -225,6 +225,7 @@
 					T01 = {
 						CreatedOnToolsVersion = 15.0;
 						TestTargetID = E00;
+					};
 				};
 			};
 			buildConfigurationList = F00 /* Build configuration list for PBXProject "MorseTrainer" */;
