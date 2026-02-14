@@ -102,7 +102,7 @@ struct LiveCopyView: View {
                     .padding()
                 }
 
-                // Backspace + Skip row
+                // Backspace + Submit + Skip row
                 HStack(spacing: 24) {
                     Button {
                         viewModel.deleteLastInput()
@@ -113,12 +113,18 @@ struct LiveCopyView: View {
                     .disabled(viewModel.isSubmitted || viewModel.userInput.isEmpty)
                     .keyboardShortcut(.delete, modifiers: [])
 
+                    Button("Submit") {
+                        viewModel.submitSequence()
+                    }
+                    .font(.subheadline)
+                    .disabled(viewModel.isSubmitted || viewModel.userInput.isEmpty)
+                    .keyboardShortcut(.return, modifiers: [])
+
                     Button("Skip") {
                         viewModel.skipToNext()
                     }
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                    .disabled(viewModel.isPlaying)
                     .keyboardShortcut(.space, modifiers: [])
                 }
                 .opacity(viewModel.currentSequence.isEmpty ? 0 : 1)
