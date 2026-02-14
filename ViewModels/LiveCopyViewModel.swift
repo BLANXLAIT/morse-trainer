@@ -4,6 +4,8 @@ import SwiftUI
 @MainActor
 class LiveCopyViewModel: HeadCopyViewModel {
 
+    override var shouldSpeakAnswer: Bool { false }
+
     override func startNewRound() {
         isSubmitted = false
         userInput = []
@@ -20,14 +22,16 @@ class LiveCopyViewModel: HeadCopyViewModel {
             availableCharacters.randomElement()!
         }
 
-        Task {
+        let task = Task {
             await playCurrentSequence()
             // Grace period after playback ends for user to finish typing
             try? await Task.sleep(nanoseconds: 1_500_000_000)
+            guard !Task.isCancelled else { return }
             if !isSubmitted {
                 submitSequence()
             }
         }
+        activeTasks.append(task)
     }
 
     override func appendInput(_ character: Character) {

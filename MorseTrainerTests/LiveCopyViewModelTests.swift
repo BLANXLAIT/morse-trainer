@@ -70,6 +70,7 @@ final class LiveCopyViewModelTests: XCTestCase {
 
         for _ in 0..<20 {
             viewModel.startNewRound()
+            viewModel.stop()
             XCTAssertGreaterThanOrEqual(viewModel.sequenceLength, 5)
             XCTAssertLessThanOrEqual(viewModel.sequenceLength, expectedMax)
         }

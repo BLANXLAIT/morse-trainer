@@ -4,6 +4,7 @@ struct LiveCopyView: View {
     @EnvironmentObject var progressManager: ProgressManager
     @StateObject private var viewModel = LiveCopyViewModel()
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var showingUnlockAlert = false
     @State private var isSetup = false
@@ -44,14 +45,13 @@ struct LiveCopyView: View {
 
                 // Input slots display
                 if !viewModel.currentSequence.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(0..<viewModel.sequenceLength, id: \.self) { index in
-                                slotView(at: index)
-                            }
+                    let columns = Array(repeating: GridItem(.fixed(36), spacing: 6), count: min(viewModel.sequenceLength, 10))
+                    LazyVGrid(columns: columns, spacing: 6) {
+                        ForEach(0..<viewModel.sequenceLength, id: \.self) { index in
+                            slotView(at: index)
                         }
-                        .padding(.horizontal)
                     }
+                    .padding(.horizontal)
                 }
 
                 // Replay button
@@ -179,6 +179,11 @@ struct LiveCopyView: View {
             .onDisappear {
                 viewModel.stop()
             }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase != .active {
+                    viewModel.stop()
+                }
+            }
             .onChange(of: viewModel.justUnlockedCharacter) { _, newValue in
                 if newValue != nil {
                     showingUnlockAlert = true
@@ -204,11 +209,11 @@ struct LiveCopyView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
                 .fill(slotBackground(at: index))
-                .frame(width: 44, height: 44)
+                .frame(width: 36, height: 36)
 
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(slotBorder(at: index), lineWidth: 2)
-                .frame(width: 44, height: 44)
+                .frame(width: 36, height: 36)
 
             if viewModel.isSubmitted {
                 // Show the correct answer if incorrect, user's answer if correct

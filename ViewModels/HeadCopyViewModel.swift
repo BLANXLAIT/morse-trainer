@@ -16,10 +16,14 @@ class HeadCopyViewModel: ObservableObject {
     private var audioEngine: AudioEngine?
     private var progressManager: ProgressManager?
     private var cancellables = Set<AnyCancellable>()
+    var activeTasks: [Task<Void, Never>] = []
 
     var sequenceLength: Int {
         currentSequence.count
     }
+
+    /// Whether to speak the answer aloud after submission. Override in subclasses to disable.
+    var shouldSpeakAnswer: Bool { true }
 
     init() {}
 
@@ -70,9 +74,10 @@ class HeadCopyViewModel: ObservableObject {
             availableCharacters.randomElement()!
         }
 
-        Task {
+        let task = Task {
             await playCurrentSequence()
         }
+        activeTasks.append(task)
     }
 
     func playCurrentSequence() async {
@@ -81,9 +86,10 @@ class HeadCopyViewModel: ObservableObject {
     }
 
     func replay() {
-        Task {
+        let task = Task {
             await playCurrentSequence()
         }
+        activeTasks.append(task)
     }
 
     func appendInput(_ character: Character) {
@@ -146,26 +152,31 @@ class HeadCopyViewModel: ObservableObject {
         }
 
         // Audio feedback
-        Task {
+        let shouldSpeak = shouldSpeakAnswer
+        let feedbackTask = Task {
             if progressManager.settings.audioFeedback {
                 await audioEngine?.playFeedbackTone(correct: allCorrect)
             }
 
-            if progressManager.settings.speakAnswer {
+            if shouldSpeak && progressManager.settings.speakAnswer {
                 try? await Task.sleep(nanoseconds: 200_000_000)
+                guard !Task.isCancelled else { return }
                 let answer = currentSequence.map { String($0.character) }.joined(separator: ", ")
                 audioEngine?.speak(answer)
             }
         }
+        activeTasks.append(feedbackTask)
 
         // Auto-advance
-        let delay: UInt64 = progressManager.settings.speakAnswer ? 3_000_000_000 : 2_000_000_000
-        Task {
+        let delay: UInt64 = (shouldSpeak && progressManager.settings.speakAnswer) ? 3_000_000_000 : 2_000_000_000
+        let advanceTask = Task {
             try? await Task.sleep(nanoseconds: delay)
+            guard !Task.isCancelled else { return }
             if isSubmitted {
                 startNewRound()
             }
         }
+        activeTasks.append(advanceTask)
     }
 
     func isValidAnswer(_ character: Character) -> Bool {
@@ -196,6 +207,8 @@ class HeadCopyViewModel: ObservableObject {
     }
 
     func stop() {
+        activeTasks.forEach { $0.cancel() }
+        activeTasks.removeAll()
         audioEngine?.stop()
     }
 }

@@ -15,6 +15,7 @@ class DrillViewModel: ObservableObject {
     private var audioEngine: AudioEngine?
     private var progressManager: ProgressManager?
     private var cancellables = Set<AnyCancellable>()
+    private var activeTasks: [Task<Void, Never>] = []
 
     enum FeedbackState {
         case none
@@ -73,9 +74,10 @@ class DrillViewModel: ObservableObject {
         currentCharacter = availableCharacters.randomElement()
 
         // Play it
-        Task {
+        let task = Task {
             await playCurrentCharacter()
         }
+        activeTasks.append(task)
     }
 
     func playCurrentCharacter() async {
@@ -84,9 +86,10 @@ class DrillViewModel: ObservableObject {
     }
 
     func replay() {
-        Task {
+        let task = Task {
             await playCurrentCharacter()
         }
+        activeTasks.append(task)
     }
 
     func submitAnswer(_ character: Character) {
@@ -111,7 +114,7 @@ class DrillViewModel: ObservableObject {
         }
 
         // Audio feedback
-        Task {
+        let feedbackTask = Task {
             if progressManager.settings.audioFeedback {
                 await audioEngine?.playFeedbackTone(correct: correct)
             }
@@ -120,9 +123,11 @@ class DrillViewModel: ObservableObject {
             if progressManager.settings.speakAnswer {
                 // Small delay after feedback tone
                 try? await Task.sleep(nanoseconds: 200_000_000)
+                guard !Task.isCancelled else { return }
                 audioEngine?.speakCharacter(current.character)
             }
         }
+        activeTasks.append(feedbackTask)
 
         // Record the attempt (also persists session stats)
         let previousUnlockedCount = progressManager.progress.unlockedCount
@@ -142,12 +147,14 @@ class DrillViewModel: ObservableObject {
 
         // Auto-advance after delay (longer if speaking answer)
         let delay: UInt64 = progressManager.settings.speakAnswer ? 2_000_000_000 : 1_500_000_000
-        Task {
+        let advanceTask = Task {
             try? await Task.sleep(nanoseconds: delay)
+            guard !Task.isCancelled else { return }
             if feedbackState != .none { // Still showing feedback
                 startNewRound()
             }
         }
+        activeTasks.append(advanceTask)
     }
 
     /// Check if a character is valid for answering (in the unlocked set)
@@ -179,6 +186,8 @@ class DrillViewModel: ObservableObject {
     }
 
     func stop() {
+        activeTasks.forEach { $0.cancel() }
+        activeTasks.removeAll()
         audioEngine?.stop()
     }
 }
