@@ -4,6 +4,7 @@ struct DrillView: View {
     @EnvironmentObject var progressManager: ProgressManager
     @StateObject private var viewModel = DrillViewModel()
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var showingUnlockAlert = false
     @State private var isSetup = false
@@ -174,6 +175,11 @@ struct DrillView: View {
             }
             .onDisappear {
                 viewModel.stop()
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase != .active {
+                    viewModel.stop()
+                }
             }
             .onChange(of: viewModel.justUnlockedCharacter) { _, newValue in
                 if newValue != nil {
