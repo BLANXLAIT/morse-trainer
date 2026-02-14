@@ -22,7 +22,21 @@
 		A13 /* CharacterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13 /* CharacterButton.swift */; };
 		A14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B14 /* Assets.xcassets */; };
 		A15 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15 /* HapticManager.swift */; };
+		T20B /* UserProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20 /* UserProgressTests.swift */; };
+		T21B /* DrillViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T21 /* DrillViewModelTests.swift */; };
+		T22B /* ProgressManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T22 /* ProgressManagerTests.swift */; };
+		T23B /* AudioEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T23 /* AudioEngineTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		T11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = G00 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E00;
+			remoteInfo = MorseTrainer;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B00 /* MorseTrainer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorseTrainer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,10 +55,22 @@
 		B13 /* CharacterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterButton.swift; sourceTree = "<group>"; };
 		B14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B15 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		T00 /* MorseTrainerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MorseTrainerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		T20 /* UserProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProgressTests.swift; sourceTree = "<group>"; };
+		T21 /* DrillViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillViewModelTests.swift; sourceTree = "<group>"; };
+		T22 /* ProgressManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManagerTests.swift; sourceTree = "<group>"; };
+		T23 /* AudioEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		T03 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -58,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				D01 /* MorseTrainer */,
+				T08 /* MorseTrainerTests */,
 				D02 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				B00 /* MorseTrainer.app */,
+				T00 /* MorseTrainerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,6 +160,17 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		T08 /* MorseTrainerTests */ = {
+			isa = PBXGroup;
+			children = (
+				T20 /* UserProgressTests.swift */,
+				T21 /* DrillViewModelTests.swift */,
+				T22 /* ProgressManagerTests.swift */,
+				T23 /* AudioEngineTests.swift */,
+			);
+			path = MorseTrainerTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -152,6 +191,24 @@
 			productReference = B00 /* MorseTrainer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		T01 /* MorseTrainerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = T05 /* Build configuration list for PBXNativeTarget "MorseTrainerTests" */;
+			buildPhases = (
+				T02 /* Sources */,
+				T03 /* Frameworks */,
+				T04 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				T10 /* PBXTargetDependency */,
+			);
+			name = MorseTrainerTests;
+			productName = MorseTrainerTests;
+			productReference = T00 /* MorseTrainerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -165,6 +222,9 @@
 					E00 = {
 						CreatedOnToolsVersion = 15.0;
 					};
+					T01 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = E00;
 				};
 			};
 			buildConfigurationList = F00 /* Build configuration list for PBXProject "MorseTrainer" */;
@@ -181,6 +241,7 @@
 			projectRoot = "";
 			targets = (
 				E00 /* MorseTrainer */,
+				T01 /* MorseTrainerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -191,6 +252,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A14 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		T04 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +286,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		T02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				T20B /* UserProgressTests.swift in Sources */,
+				T21B /* DrillViewModelTests.swift in Sources */,
+				T22B /* ProgressManagerTests.swift in Sources */,
+				T23B /* AudioEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		T10 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E00 /* MorseTrainer */;
+			targetProxy = T11 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		H00 /* Debug */ = {
@@ -400,6 +487,44 @@
 			};
 			name = Release;
 		};
+		T06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GCRLV5UC4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.blanxlait.cwcarver.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MorseTrainer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MorseTrainer";
+			};
+			name = Debug;
+		};
+		T07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GCRLV5UC4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.blanxlait.cwcarver.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MorseTrainer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MorseTrainer";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -417,6 +542,15 @@
 			buildConfigurations = (
 				H02 /* Debug */,
 				H03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		T05 /* Build configuration list for PBXNativeTarget "MorseTrainerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				T06 /* Debug */,
+				T07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
