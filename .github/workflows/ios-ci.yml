@@ -25,12 +25,12 @@ jobs:
       
     - name: Run tests
       run: |
+        set -o pipefail
         xcodebuild test \
           -project MorseTrainer.xcodeproj \
           -scheme MorseTrainer \
           -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
-          -enableCodeCoverage YES \
-          | xcpretty && exit ${PIPESTATUS[0]}
+          -enableCodeCoverage YES
       continue-on-error: false
       
     - name: Upload test results
