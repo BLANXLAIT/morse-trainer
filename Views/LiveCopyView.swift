@@ -8,6 +8,7 @@ struct LiveCopyView: View {
 
     @State private var showingUnlockAlert = false
     @State private var isSetup = false
+    @State private var animatingSlotIndex: Int?
     @FocusState private var isFocused: Bool
 
     var body: some View {
@@ -184,6 +185,17 @@ struct LiveCopyView: View {
                     viewModel.stop()
                 }
             }
+            .onChange(of: viewModel.userInput.count) { oldCount, newCount in
+                if newCount > oldCount {
+                    animatingSlotIndex = newCount - 1
+                    Task {
+                        try? await Task.sleep(nanoseconds: 200_000_000)
+                        animatingSlotIndex = nil
+                    }
+                } else {
+                    animatingSlotIndex = nil
+                }
+            }
             .onChange(of: viewModel.justUnlockedCharacter) { _, newValue in
                 if newValue != nil {
                     showingUnlockAlert = true
@@ -244,13 +256,18 @@ struct LiveCopyView: View {
                     .fontWeight(.bold)
             }
         }
+        .scaleEffect(animatingSlotIndex == index ? 1.2 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: viewModel.isSubmitted)
+        .animation(.spring(duration: 0.2, bounce: 0.4), value: animatingSlotIndex)
     }
 
     private func slotBackground(at index: Int) -> Color {
         guard viewModel.isSubmitted,
               viewModel.feedbackResults.indices.contains(index),
               let result = viewModel.feedbackResults[index] else {
+            if animatingSlotIndex == index {
+                return .blue.opacity(0.3)
+            }
             return index < viewModel.userInput.count ? .secondary.opacity(0.15) : .clear
         }
         return result ? .green : .red
