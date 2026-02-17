@@ -8,7 +8,6 @@ struct LiveCopyView: View {
 
     @State private var showingUnlockAlert = false
     @State private var isSetup = false
-    @State private var animatingSlotIndex: Int?
     @FocusState private var isFocused: Bool
 
     var body: some View {
@@ -46,12 +45,13 @@ struct LiveCopyView: View {
 
                 // Input slots display
                 if !viewModel.currentSequence.isEmpty {
-                    let columns = Array(repeating: GridItem(.fixed(36), spacing: 6), count: min(viewModel.sequenceLength, 10))
-                    LazyVGrid(columns: columns, spacing: 6) {
-                        ForEach(0..<viewModel.sequenceLength, id: \.self) { index in
-                            slotView(at: index)
-                        }
-                    }
+                    InputSlotsView(
+                        currentSequence: viewModel.currentSequence,
+                        userInput: viewModel.userInput,
+                        isSubmitted: viewModel.isSubmitted,
+                        feedbackResults: viewModel.feedbackResults,
+                        style: .compact
+                    )
                     .padding(.horizontal)
                 }
 
@@ -185,17 +185,6 @@ struct LiveCopyView: View {
                     viewModel.stop()
                 }
             }
-            .onChange(of: viewModel.userInput.count) { oldCount, newCount in
-                if newCount > oldCount {
-                    animatingSlotIndex = newCount - 1
-                    Task {
-                        try? await Task.sleep(nanoseconds: 200_000_000)
-                        animatingSlotIndex = nil
-                    }
-                } else {
-                    animatingSlotIndex = nil
-                }
-            }
             .onChange(of: viewModel.justUnlockedCharacter) { _, newValue in
                 if newValue != nil {
                     showingUnlockAlert = true
@@ -211,79 +200,6 @@ struct LiveCopyView: View {
                 }
             }
         }
-    }
-
-    @ViewBuilder
-    private func slotView(at index: Int) -> some View {
-        let hasInput = index < viewModel.userInput.count
-        let char = hasInput ? String(viewModel.userInput[index]) : ""
-
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(slotBackground(at: index))
-                .frame(width: 36, height: 36)
-
-            RoundedRectangle(cornerRadius: 8)
-                .strokeBorder(slotBorder(at: index), lineWidth: 2)
-                .frame(width: 36, height: 36)
-
-            if viewModel.isSubmitted {
-                // Show the correct answer if incorrect, user's answer if correct
-                let isCorrect = viewModel.feedbackResults.indices.contains(index) && viewModel.feedbackResults[index] == true
-                if isCorrect {
-                    Text(char)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                } else {
-                    VStack(spacing: 0) {
-                        if hasInput {
-                            Text(char)
-                                .font(.caption2)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.white.opacity(0.7))
-                                .strikethrough()
-                        }
-                        Text(String(viewModel.currentSequence[index].character))
-                            .font(.subheadline)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.white)
-                    }
-                }
-            } else {
-                Text(char)
-                    .font(.title3)
-                    .fontWeight(.bold)
-            }
-        }
-        .scaleEffect(animatingSlotIndex == index ? 1.2 : 1.0)
-        .animation(.easeInOut(duration: 0.2), value: viewModel.isSubmitted)
-        .animation(.spring(duration: 0.2, bounce: 0.4), value: animatingSlotIndex)
-    }
-
-    private func slotBackground(at index: Int) -> Color {
-        guard viewModel.isSubmitted,
-              viewModel.feedbackResults.indices.contains(index),
-              let result = viewModel.feedbackResults[index] else {
-            if animatingSlotIndex == index {
-                return .blue.opacity(0.3)
-            }
-            return index < viewModel.userInput.count ? .secondary.opacity(0.15) : .clear
-        }
-        return result ? .green : .red
-    }
-
-    private func slotBorder(at index: Int) -> Color {
-        guard viewModel.isSubmitted,
-              viewModel.feedbackResults.indices.contains(index),
-              let result = viewModel.feedbackResults[index] else {
-            // Highlight the "active" slot (next to fill)
-            if index == viewModel.userInput.count && !viewModel.isSubmitted {
-                return .blue
-            }
-            return .secondary.opacity(0.3)
-        }
-        return result ? .green : .red
     }
 
     private var availableCharactersString: String {
