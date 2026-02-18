@@ -53,7 +53,7 @@ final class MorseTrainerUITests: XCTestCase {
         // Input slots appear after sequence generation; search all element types
         let predicate = NSPredicate(format: "identifier == 'InputSlot_0'")
         let firstSlot = app.descendants(matching: .any).matching(predicate).firstMatch
-        XCTAssertTrue(firstSlot.waitForExistence(timeout: 15))
+        XCTAssertTrue(firstSlot.waitForExistence(timeout: 10))
     }
 
     func testLiveCopyReplayButton() {
@@ -72,7 +72,15 @@ final class MorseTrainerUITests: XCTestCase {
 
         let predicate = NSPredicate(format: "identifier == 'InputSlot_0'")
         let firstSlot = app.descendants(matching: .any).matching(predicate).firstMatch
-        XCTAssertTrue(firstSlot.waitForExistence(timeout: 15))
+        XCTAssertTrue(firstSlot.waitForExistence(timeout: 10))
+    }
+
+    func testHeadCopyReplayButton() {
+        app.buttons["HeadCopy"].tap()
+        XCTAssertTrue(app.buttons["DoneButton"].waitForExistence(timeout: 3))
+
+        let replayButton = app.buttons["ReplayButton"]
+        XCTAssertTrue(replayButton.waitForExistence(timeout: 3))
     }
 
     // MARK: - Drill Flow
