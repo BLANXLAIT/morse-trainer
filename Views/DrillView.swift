@@ -79,6 +79,7 @@ struct DrillView: View {
                     }
                     .disabled(viewModel.isPlaying)
                     .keyboardShortcut("r", modifiers: [])
+                    .accessibilityIdentifier("ReplayButton")
                 }
 
                 Spacer()
@@ -124,6 +125,7 @@ struct DrillView: View {
                 .foregroundStyle(.secondary)
                 .disabled(viewModel.isPlaying)
                 .keyboardShortcut(.space, modifiers: [])
+                .accessibilityIdentifier("SkipButton")
                 .opacity(viewModel.currentCharacter != nil && !viewModel.showingAnswer ? 1 : 0)
                 .allowsHitTesting(viewModel.currentCharacter != nil && !viewModel.showingAnswer)
 
@@ -142,6 +144,7 @@ struct DrillView: View {
                         dismiss()
                     }
                     .keyboardShortcut(.escape, modifiers: [])
+                    .accessibilityIdentifier("DoneButton")
                 }
 
                 ToolbarItem(placement: .principal) {

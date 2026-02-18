@@ -68,6 +68,7 @@ struct HeadCopyView: View {
                 }
                 .disabled(viewModel.isPlaying)
                 .keyboardShortcut("r", modifiers: [])
+                .accessibilityIdentifier("ReplayButton")
 
                 Spacer()
 
@@ -113,6 +114,7 @@ struct HeadCopyView: View {
                     }
                     .disabled(viewModel.isSubmitted || viewModel.userInput.isEmpty || viewModel.isPlaying)
                     .keyboardShortcut(.delete, modifiers: [])
+                    .accessibilityIdentifier("DeleteButton")
 
                     Button("Skip") {
                         viewModel.skipToNext()
@@ -121,6 +123,7 @@ struct HeadCopyView: View {
                     .foregroundStyle(.secondary)
                     .disabled(viewModel.isPlaying)
                     .keyboardShortcut(.space, modifiers: [])
+                    .accessibilityIdentifier("SkipButton")
                 }
                 .opacity(viewModel.currentSequence.isEmpty ? 0 : 1)
                 .allowsHitTesting(!viewModel.currentSequence.isEmpty)
@@ -140,6 +143,7 @@ struct HeadCopyView: View {
                         dismiss()
                     }
                     .keyboardShortcut(.escape, modifiers: [])
+                    .accessibilityIdentifier("DoneButton")
                 }
 
                 ToolbarItem(placement: .principal) {

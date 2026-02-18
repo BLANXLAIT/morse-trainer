@@ -34,6 +34,20 @@
                ReferencedContainer = "container:MorseTrainer.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "U01"
+               BuildableName = "MorseTrainerUITests.xctest"
+               BlueprintName = "MorseTrainerUITests"
+               ReferencedContainer = "container:MorseTrainer.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -51,6 +65,17 @@
                BlueprintIdentifier = "T01"
                BuildableName = "MorseTrainerTests.xctest"
                BlueprintName = "MorseTrainerTests"
+               ReferencedContainer = "container:MorseTrainer.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "U01"
+               BuildableName = "MorseTrainerUITests.xctest"
+               BlueprintName = "MorseTrainerUITests"
                ReferencedContainer = "container:MorseTrainer.xcodeproj">
             </BuildableReference>
          </TestableReference>
