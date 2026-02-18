@@ -8,6 +8,7 @@ struct InputSlotsView: View {
     let style: SlotStyle
 
     @State private var animatingSlotIndex: Int?
+    @State private var animationTask: Task<Void, Never>?
 
     enum SlotStyle {
         case compact  // 36pt slots — live copy (many characters)
@@ -67,12 +68,16 @@ struct InputSlotsView: View {
         .frame(height: gridHeight)
         .onChange(of: userInput.count) { oldCount, newCount in
             if newCount > oldCount {
+                animationTask?.cancel()
                 animatingSlotIndex = newCount - 1
-                Task {
+                animationTask = Task {
                     try? await Task.sleep(nanoseconds: 200_000_000)
-                    animatingSlotIndex = nil
+                    if !Task.isCancelled {
+                        animatingSlotIndex = nil
+                    }
                 }
             } else {
+                animationTask?.cancel()
                 animatingSlotIndex = nil
             }
         }
