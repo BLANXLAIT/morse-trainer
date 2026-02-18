@@ -70,8 +70,9 @@ class DrillViewModel: ObservableObject {
         showingAnswer = false
         justUnlockedCharacter = nil
 
-        // Pick a random character from unlocked set
-        currentCharacter = availableCharacters.randomElement()
+        // Pick a character weighted toward weaker ones
+        currentCharacter = progressManager?.progress.weightedRandomCharacter(from: availableCharacters)
+            ?? availableCharacters.randomElement()
 
         // Play it
         let task = Task {

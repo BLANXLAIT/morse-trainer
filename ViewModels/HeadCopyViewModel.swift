@@ -70,8 +70,9 @@ class HeadCopyViewModel: ObservableObject {
         justUnlockedCharacter = nil
 
         let length = Int.random(in: 3...5)
-        currentSequence = (0..<length).map { _ in
-            availableCharacters.randomElement()!
+        currentSequence = (0..<length).compactMap { _ in
+            progressManager?.progress.weightedRandomCharacter(from: availableCharacters)
+                ?? availableCharacters.randomElement()
         }
 
         let task = Task {

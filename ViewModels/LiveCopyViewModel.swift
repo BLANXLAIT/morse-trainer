@@ -18,8 +18,9 @@ class LiveCopyViewModel: HeadCopyViewModel {
         let charCount = availableCharacters.count
         let maxLength = min(20, 5 + charCount)
         let length = Int.random(in: 5...maxLength)
-        currentSequence = (0..<length).map { _ in
-            availableCharacters.randomElement()!
+        currentSequence = (0..<length).compactMap { _ in
+            progressManager?.progress.weightedRandomCharacter(from: availableCharacters)
+                ?? availableCharacters.randomElement()
         }
 
         let task = Task {
