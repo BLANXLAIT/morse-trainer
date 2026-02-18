@@ -68,6 +68,7 @@ struct LiveCopyView: View {
                 }
                 .disabled(viewModel.isPlaying)
                 .keyboardShortcut("r", modifiers: [])
+                .accessibilityIdentifier("ReplayButton")
 
                 Spacer()
 
@@ -113,6 +114,7 @@ struct LiveCopyView: View {
                     }
                     .disabled(viewModel.isSubmitted || viewModel.userInput.isEmpty)
                     .keyboardShortcut(.delete, modifiers: [])
+                    .accessibilityIdentifier("DeleteButton")
 
                     Button("Submit") {
                         viewModel.submitSequence()
@@ -120,6 +122,7 @@ struct LiveCopyView: View {
                     .font(.subheadline)
                     .disabled(viewModel.isSubmitted || viewModel.userInput.isEmpty)
                     .keyboardShortcut(.return, modifiers: [])
+                    .accessibilityIdentifier("SubmitButton")
 
                     Button("Skip") {
                         viewModel.skipToNext()
@@ -127,6 +130,7 @@ struct LiveCopyView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .keyboardShortcut(.space, modifiers: [])
+                    .accessibilityIdentifier("SkipButton")
                 }
                 .opacity(viewModel.currentSequence.isEmpty ? 0 : 1)
                 .allowsHitTesting(!viewModel.currentSequence.isEmpty)
@@ -146,6 +150,7 @@ struct LiveCopyView: View {
                         dismiss()
                     }
                     .keyboardShortcut(.escape, modifiers: [])
+                    .accessibilityIdentifier("DoneButton")
                 }
 
                 ToolbarItem(placement: .principal) {

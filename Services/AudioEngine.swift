@@ -223,7 +223,9 @@ class AudioEngine: ObservableObject {
 
     private func stopEngine() {
         renderState.toneOn = false
-        audioEngine?.stop()
+        if audioEngine?.isRunning == true {
+            audioEngine?.stop()
+        }
         if let sourceNode = sourceNode {
             audioEngine?.detach(sourceNode)
         }

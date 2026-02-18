@@ -141,6 +141,7 @@ struct InputSlotsView: View {
         .scaleEffect(animatingSlotIndex == index ? 1.2 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: isSubmitted)
         .animation(.spring(duration: 0.2, bounce: 0.4), value: animatingSlotIndex)
+        .accessibilityIdentifier("InputSlot_\(index)")
     }
 
     private func slotBackground(at index: Int) -> Color {

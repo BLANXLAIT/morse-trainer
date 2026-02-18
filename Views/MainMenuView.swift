@@ -53,6 +53,7 @@ struct MainMenuView: View {
                             .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .accessibilityIdentifier("StartDrill")
 
                     Button {
                         showingLiveCopy = true
@@ -65,6 +66,7 @@ struct MainMenuView: View {
                             .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .accessibilityIdentifier("LiveCopy")
 
                     Button {
                         showingHeadCopy = true
@@ -77,6 +79,7 @@ struct MainMenuView: View {
                             .foregroundStyle(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .accessibilityIdentifier("HeadCopy")
 
                     HStack(spacing: 16) {
                         Button {
@@ -89,6 +92,7 @@ struct MainMenuView: View {
                                 .background(.secondary.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
+                        .accessibilityIdentifier("Progress")
 
                         Button {
                             showingSettings = true
@@ -100,6 +104,7 @@ struct MainMenuView: View {
                                 .background(.secondary.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
+                        .accessibilityIdentifier("Settings")
                     }
                 }
                 .padding(.horizontal)
