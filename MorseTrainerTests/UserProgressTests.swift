@@ -303,11 +303,90 @@ final class UserProgressTests: XCTestCase {
     
     func testAvailableCharacters() {
         var progress = UserProgress()
-        
+
         let available = progress.availableCharacters
-        
+
         XCTAssertEqual(available.count, progress.unlockedCount)
         XCTAssertTrue(available.contains { $0.character == "K" })
         XCTAssertTrue(available.contains { $0.character == "M" })
+    }
+
+    // MARK: - Weighted Character Selection
+
+    func testSelectionWeight_NoHistory() {
+        let progress = UserProgress()
+
+        // Characters with no history get weight 1.5
+        XCTAssertEqual(progress.selectionWeight(for: "K"), 1.5)
+    }
+
+    func testSelectionWeight_PerfectAccuracy() {
+        var progress = UserProgress()
+        for _ in 0..<10 {
+            progress.recordAttempt(character: "K", correct: true)
+        }
+
+        // 100% accuracy → minimum weight 0.2
+        XCTAssertEqual(progress.selectionWeight(for: "K"), 0.2, accuracy: 0.01)
+    }
+
+    func testSelectionWeight_ZeroAccuracy() {
+        var progress = UserProgress()
+        for _ in 0..<10 {
+            progress.recordAttempt(character: "K", correct: false)
+        }
+
+        // 0% accuracy → maximum weight 2.0
+        XCTAssertEqual(progress.selectionWeight(for: "K"), 2.0, accuracy: 0.01)
+    }
+
+    func testSelectionWeight_HalfAccuracy() {
+        var progress = UserProgress()
+        for _ in 0..<5 {
+            progress.recordAttempt(character: "K", correct: true)
+            progress.recordAttempt(character: "K", correct: false)
+        }
+
+        // 50% accuracy → 0.2 + 1.8 * 0.5 = 1.1
+        XCTAssertEqual(progress.selectionWeight(for: "K"), 1.1, accuracy: 0.01)
+    }
+
+    func testWeightedRandomCharacter_EmptyArray() {
+        let progress = UserProgress()
+        XCTAssertNil(progress.weightedRandomCharacter(from: []))
+    }
+
+    func testWeightedRandomCharacter_SingleElement() {
+        let progress = UserProgress()
+        let chars = KochSequence.characters(upTo: 1)
+
+        let result = progress.weightedRandomCharacter(from: chars)
+        XCTAssertEqual(result?.character, chars[0].character)
+    }
+
+    func testWeightedRandomCharacter_FavorsWeakerCharacters() {
+        var progress = UserProgress()
+
+        // K is strong (100% accuracy), M is weak (0% accuracy)
+        for _ in 0..<10 {
+            progress.recordAttempt(character: "K", correct: true)
+            progress.recordAttempt(character: "M", correct: false)
+        }
+
+        let chars = KochSequence.characters(upTo: 2)
+
+        // Sample many times and check M is picked more often
+        var counts: [Character: Int] = ["K": 0, "M": 0]
+        for _ in 0..<1000 {
+            if let picked = progress.weightedRandomCharacter(from: chars) {
+                counts[picked.character, default: 0] += 1
+            }
+        }
+
+        // M (weight 2.0) should be picked ~10x more than K (weight 0.2)
+        // With 1000 samples, M should get roughly 909 and K roughly 91
+        // Use a loose bound to avoid flaky tests
+        XCTAssertGreaterThan(counts["M"]!, counts["K"]! * 3,
+            "Weak character M should be picked much more often than strong character K")
     }
 }

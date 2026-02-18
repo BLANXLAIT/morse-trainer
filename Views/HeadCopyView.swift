@@ -45,11 +45,13 @@ struct HeadCopyView: View {
 
                 // Input slots display
                 if !viewModel.currentSequence.isEmpty {
-                    HStack(spacing: 12) {
-                        ForEach(0..<viewModel.sequenceLength, id: \.self) { index in
-                            slotView(at: index)
-                        }
-                    }
+                    InputSlotsView(
+                        currentSequence: viewModel.currentSequence,
+                        userInput: viewModel.userInput,
+                        isSubmitted: viewModel.isSubmitted,
+                        feedbackResults: viewModel.feedbackResults,
+                        style: .regular
+                    )
                     .padding(.horizontal)
                 }
 
@@ -192,74 +194,6 @@ struct HeadCopyView: View {
                 }
             }
         }
-    }
-
-    @ViewBuilder
-    private func slotView(at index: Int) -> some View {
-        let hasInput = index < viewModel.userInput.count
-        let char = hasInput ? String(viewModel.userInput[index]) : ""
-
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(slotBackground(at: index))
-                .frame(width: 52, height: 52)
-
-            RoundedRectangle(cornerRadius: 8)
-                .strokeBorder(slotBorder(at: index), lineWidth: 2)
-                .frame(width: 52, height: 52)
-
-            if viewModel.isSubmitted {
-                // Show the correct answer if incorrect, user's answer if correct
-                let isCorrect = viewModel.feedbackResults.indices.contains(index) && viewModel.feedbackResults[index] == true
-                if isCorrect {
-                    Text(char)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                } else {
-                    VStack(spacing: 0) {
-                        if hasInput {
-                            Text(char)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.white.opacity(0.7))
-                                .strikethrough()
-                        }
-                        Text(String(viewModel.currentSequence[index].character))
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.white)
-                    }
-                }
-            } else {
-                Text(char)
-                    .font(.title2)
-                    .fontWeight(.bold)
-            }
-        }
-        .animation(.easeInOut(duration: 0.2), value: viewModel.isSubmitted)
-    }
-
-    private func slotBackground(at index: Int) -> Color {
-        guard viewModel.isSubmitted,
-              viewModel.feedbackResults.indices.contains(index),
-              let result = viewModel.feedbackResults[index] else {
-            return index < viewModel.userInput.count ? .secondary.opacity(0.15) : .clear
-        }
-        return result ? .green : .red
-    }
-
-    private func slotBorder(at index: Int) -> Color {
-        guard viewModel.isSubmitted,
-              viewModel.feedbackResults.indices.contains(index),
-              let result = viewModel.feedbackResults[index] else {
-            // Highlight the "active" slot (next to fill)
-            if index == viewModel.userInput.count && !viewModel.isSubmitted {
-                return .blue
-            }
-            return .secondary.opacity(0.3)
-        }
-        return result ? .green : .red
     }
 
     private var availableCharactersString: String {

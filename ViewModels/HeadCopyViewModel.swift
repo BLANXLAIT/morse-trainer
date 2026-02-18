@@ -14,7 +14,7 @@ class HeadCopyViewModel: ObservableObject {
     @Published var isPlaying = false
 
     private var audioEngine: AudioEngine?
-    private var progressManager: ProgressManager?
+    private(set) var progressManager: ProgressManager?
     private var cancellables = Set<AnyCancellable>()
     var activeTasks: [Task<Void, Never>] = []
 
@@ -70,8 +70,9 @@ class HeadCopyViewModel: ObservableObject {
         justUnlockedCharacter = nil
 
         let length = Int.random(in: 3...5)
-        currentSequence = (0..<length).map { _ in
-            availableCharacters.randomElement()!
+        currentSequence = (0..<length).compactMap { _ in
+            progressManager?.progress.weightedRandomCharacter(from: availableCharacters)
+                ?? availableCharacters.randomElement()
         }
 
         let task = Task {

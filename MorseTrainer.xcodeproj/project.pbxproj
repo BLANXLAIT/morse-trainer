@@ -26,6 +26,7 @@
 		A17 /* HeadCopyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17 /* HeadCopyView.swift */; };
 		A18 /* LiveCopyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18 /* LiveCopyViewModel.swift */; };
 		A19 /* LiveCopyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19 /* LiveCopyView.swift */; };
+		A20 /* InputSlotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20 /* InputSlotsView.swift */; };
 		T20B /* UserProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20 /* UserProgressTests.swift */; };
 		T21B /* DrillViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T21 /* DrillViewModelTests.swift */; };
 		T22B /* ProgressManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T22 /* ProgressManagerTests.swift */; };
@@ -64,6 +65,7 @@
 		B17 /* HeadCopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadCopyView.swift; sourceTree = "<group>"; };
 		B18 /* LiveCopyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCopyViewModel.swift; sourceTree = "<group>"; };
 		B19 /* LiveCopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCopyView.swift; sourceTree = "<group>"; };
+		B20 /* InputSlotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputSlotsView.swift; sourceTree = "<group>"; };
 		T00 /* MorseTrainerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MorseTrainerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		T20 /* UserProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProgressTests.swift; sourceTree = "<group>"; };
 		T21 /* DrillViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrillViewModelTests.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				B13 /* CharacterButton.swift */,
+				B20 /* InputSlotsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 				A17 /* HeadCopyView.swift in Sources */,
 				A18 /* LiveCopyViewModel.swift in Sources */,
 				A19 /* LiveCopyView.swift in Sources */,
+				A20 /* InputSlotsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -176,4 +176,36 @@ struct UserProgress: Codable {
     var availableCharacters: [MorseCharacter] {
         KochSequence.characters(upTo: unlockedCount)
     }
+
+    // MARK: - Weighted Character Selection
+
+    /// Pick a random character weighted toward characters the user struggles with.
+    /// Lower accuracy → higher chance of being selected.
+    /// Characters with no history get a moderately high weight.
+    func weightedRandomCharacter(from characters: [MorseCharacter]) -> MorseCharacter? {
+        guard !characters.isEmpty else { return nil }
+
+        let weights = characters.map { selectionWeight(for: $0.character) }
+        let totalWeight = weights.reduce(0, +)
+        var roll = Double.random(in: 0..<totalWeight)
+
+        for (index, weight) in weights.enumerated() {
+            roll -= weight
+            if roll <= 0 {
+                return characters[index]
+            }
+        }
+
+        return characters.last
+    }
+
+    /// Weight for a character: lower accuracy = higher weight.
+    /// Range: 0.2 (100% accuracy) to 2.0 (0% accuracy). New characters get 1.5.
+    func selectionWeight(for character: Character) -> Double {
+        guard let history = characterHistory[String(character)], !history.isEmpty else {
+            return 1.5
+        }
+        let acc = accuracy(for: character) / 100.0
+        return 0.2 + 1.8 * (1.0 - acc)
+    }
 }
