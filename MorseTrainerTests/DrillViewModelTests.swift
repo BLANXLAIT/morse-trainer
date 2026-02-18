@@ -208,8 +208,8 @@ final class DrillViewModelTests: XCTestCase {
     
     func testSkipToNext() {
         viewModel.startNewRound()
-        let firstChar = viewModel.currentCharacter
-        
+        _ = viewModel.currentCharacter
+
         viewModel.skipToNext()
         
         // Should have a new character (may be the same by random chance)

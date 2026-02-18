@@ -302,7 +302,7 @@ final class UserProgressTests: XCTestCase {
     }
     
     func testAvailableCharacters() {
-        var progress = UserProgress()
+        let progress = UserProgress()
 
         let available = progress.availableCharacters
 
