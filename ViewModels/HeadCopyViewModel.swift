@@ -14,7 +14,7 @@ class HeadCopyViewModel: ObservableObject {
     @Published var isPlaying = false
 
     private var audioEngine: AudioEngine?
-    private var progressManager: ProgressManager?
+    private(set) var progressManager: ProgressManager?
     private var cancellables = Set<AnyCancellable>()
     var activeTasks: [Task<Void, Never>] = []
 
